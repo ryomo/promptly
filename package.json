@@ -1,6 +1,6 @@
 {
-  "name": "wxt-starter",
-  "description": "manifest.json description",
+  "name": "quick-explain",
+  "description": "A Chrome extension that explains any word or phrase you select.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
