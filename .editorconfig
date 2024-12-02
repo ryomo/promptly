@@ -1,0 +1,12 @@
+[*]
+indent_style = space
+trim_trailing_whitespace = true
+
+[*.{js,jsx,ts,tsx}]
+indent_size = 2
+
+[*.{html,css}]
+indent_size = 2
+
+[*.md]
+indent_size = 2
