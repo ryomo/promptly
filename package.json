@@ -15,7 +15,11 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
+    "@mozilla/readability": "^0.5.0",
     "@types/chrome": "^0.0.280",
+    "@types/dom-chromium-ai": "^0.0.4",
+    "dompurify": "^3.2.1",
+    "marked": "^15.0.2",
     "typescript": "^5.6.3",
     "wxt": "^0.19.13"
   }

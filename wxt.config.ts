@@ -7,5 +7,7 @@ export default defineConfig({
   extensionApi: 'chrome',
   manifest: {
     name: 'Quick Explain',
+    permissions: ['storage', 'tabs', 'scripting', 'debugger'],
+    host_permissions: ["*://*/*"],
   }
 });
