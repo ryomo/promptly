@@ -70,6 +70,15 @@ export function hideErrorMessage() {
   divErrorSection.style.display = 'none';
 }
 
+export function addCloseErrorButtonEventListener() {
+  const closeErrorButton = document.getElementById('close-error-button') as HTMLButtonElement;
+  const errorSection = document.getElementById('error-section') as HTMLDivElement;
+
+  closeErrorButton.addEventListener('click', () => {
+    errorSection.style.display = 'none';
+  });
+}
+
 const DIV_AI_PARENT_ID = 'ai-section';
 const DIV_AI_CHILD_CLASS = 'ai-response-container';
 

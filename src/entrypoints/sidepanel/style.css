@@ -46,6 +46,7 @@ body {
 }
 
 #error-section {
+  position: relative;
   width: calc(100% - 10px);
   background-color: #f777771c;
   border: 1px solid #d33;
@@ -53,6 +54,7 @@ body {
   display: none;
 
   .error-container {
+    position: relative;
     padding: 15px;
 
     h2 {
@@ -63,6 +65,21 @@ body {
 
     .error-message {
       color: #fdd;
+    }
+
+    #close-error-button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: transparent;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #close-error-button:hover {
+      color: #d33;
     }
   }
 }

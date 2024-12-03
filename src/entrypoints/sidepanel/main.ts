@@ -3,7 +3,7 @@ import { storage } from 'wxt/storage';
 import { addQuestionEditingEventListeners, addSingleQuestionEventListener } from './questions';
 import { Prompt, PromptError } from './prompt';
 import { SummarizeError, summarizeText } from './summarize';
-import { addAiResponse, addAiResponseStream, clearAiResponses, getTabId, hideErrorMessage, isHttpPage, readArticleFromContent, showErrorMessage } from './utils';
+import { addAiResponse, addAiResponseStream, addCloseErrorButtonEventListener, clearAiResponses, getTabId, hideErrorMessage, isHttpPage, readArticleFromContent, showErrorMessage } from './utils';
 
 
 const DEFAULT_QUESTIONS = [
@@ -93,6 +93,7 @@ async function process(tabId: number) {
 function initialize() {
   hideErrorMessage();
   clearAiResponses();
+  addCloseErrorButtonEventListener();
 
   if (promptObj) {
     promptObj.destroy();
