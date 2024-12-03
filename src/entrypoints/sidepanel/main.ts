@@ -1,12 +1,21 @@
 import { browser } from 'wxt/browser';
+import { storage } from 'wxt/storage';
+import { addQuestionEventListeners } from './questions';
 import { Prompt, PromptError } from './prompt';
 import { SummarizeError, summarizeText } from './summarize';
 import { addAiResponse, addAiResponseStream, clearAiResponses, getTabId, hideErrorMessage, isHttpPage, readArticleFromContent, showErrorMessage } from './utils';
 
 
-const tabId = await getTabId();
+const DEFAULT_QUESTIONS = [
+  "Summarize this article. (~1000 characters)",
+  "What are the key points of the article? (~2000 characters)",
+  "I'm a programmer. Please explain the parts of this article that are relevant to me. (~1000 characters)",
+];
 
-let promptSession: Prompt;
+let promptObj: Prompt;
+let questions: string[] = [];
+
+const tabId = await getTabId();
 
 
 main();
@@ -34,6 +43,17 @@ async function main() {
     }
     console.log('tabs.onUpdated:', tabId);
     process(tabId);
+  });
+
+  questions = await storage.getItem('local:questions', { defaultValue: DEFAULT_QUESTIONS }) ?? [];
+
+  addQuestionEventListeners(questions, (newQuestions: string[] | null) => {
+    // When the questions are updated
+    questions = newQuestions ?? [];
+    console.log('questions updated:', questions);
+    if (tabId) {
+      process(tabId);
+    }
   });
 }
 
