@@ -27,12 +27,12 @@ export class Prompt {
     });
   }
 
-  promptStreaming(prompt: string): ReadableStream {
+  promptStreaming(inputText: string): ReadableStream {
     if (!this.session) {
       throw new PromptError('The prompt model is not available');
     }
 
-    const stream: ReadableStream = this.session.promptStreaming(prompt);
+    const stream: ReadableStream = this.session.promptStreaming(inputText);
     return stream;
   }
 
@@ -44,11 +44,18 @@ export class Prompt {
   }
 
   destroy() {
-    if (this.session) {
-      this.session.destroy();
+    if (!this.session) {
+      console.log('No prompt session to destroy');
+      return;
     }
+    this.session.destroy();
+    console.log('Prompt session destroyed');
   }
 }
 
-class PromptError extends Error {
+/**
+ * Error class for summarization
+ * The message of the error be shown to the user.
+ */
+export class PromptError extends Error {
 }
