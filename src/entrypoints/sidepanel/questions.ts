@@ -6,7 +6,7 @@ import { storage } from 'wxt/storage';
  * @param questions The list of questions to be displayed and edited.
  * @param onStorageUpdated A callback function to be called when the questions on local storage are updated.
  */
-export function addQuestionEventListeners(questions: string[], onStorageUpdated: (newQuestions: string[] | null) => void) {
+export function addQuestionEditingEventListeners(questions: string[], onStorageUpdated: (newQuestions: string[] | null) => void) {
   let questionsTemp = [...questions];  // Copy the array to avoid passing by reference
 
   addEventListenerToToggleButton(questionsTemp);
@@ -86,5 +86,43 @@ function addEventListenerToQuestionButtons(questions: string[]) {
       li.appendChild(deleteButton);
       questionList.appendChild(li);
     });
+  }
+}
+
+/**
+ * Adds event listeners to the submit for submitting a single question.
+ * @param onSubmit A callback function to be called when the question is submitted.
+ */
+export function addSingleQuestionEventListener(onSubmit: (question: string) => void) {
+  const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
+  const promptInput = document.getElementById('prompt-input') as HTMLTextAreaElement;
+
+  submitButton.addEventListener('click', submitPrompt);
+
+  promptInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      submitPrompt();
+    }
+  });
+
+  function submitPrompt() {
+    const promptText = promptInput.value.trim();
+    if (!promptText) {
+      console.warn('Prompt input is empty');
+      return;
+    }
+    console.log('Prompt submitted:', promptText);
+    onSubmit(promptText);
+    promptInput.value = '';
+
+    // Scroll to the bottom
+    const aiSection = document.getElementById('ai-section');
+    if (aiSection) {
+      aiSection.scrollTo({
+        top: aiSection.scrollHeight - aiSection.clientHeight,
+        behavior: 'smooth'
+      });
+    }
   }
 }

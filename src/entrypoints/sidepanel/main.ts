@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { storage } from 'wxt/storage';
-import { addQuestionEventListeners } from './questions';
+import { addQuestionEditingEventListeners, addSingleQuestionEventListener } from './questions';
 import { Prompt, PromptError } from './prompt';
 import { SummarizeError, summarizeText } from './summarize';
 import { addAiResponse, addAiResponseStream, clearAiResponses, getTabId, hideErrorMessage, isHttpPage, readArticleFromContent, showErrorMessage } from './utils';
@@ -47,13 +47,17 @@ async function main() {
 
   questions = await storage.getItem('local:questions', { defaultValue: DEFAULT_QUESTIONS }) ?? [];
 
-  addQuestionEventListeners(questions, (newQuestions: string[] | null) => {
+  addQuestionEditingEventListeners(questions, (newQuestions: string[] | null) => {
     // When the questions are updated
     questions = newQuestions ?? [];
     console.log('questions updated:', questions);
     if (tabId) {
       process(tabId);
     }
+  });
+
+  addSingleQuestionEventListener(async (question) => {
+    queueTask(() => singlePrompt(question));
   });
 }
 
@@ -102,28 +106,45 @@ async function promptApi(article: string) {
 
   for (let i=0; i<questions.length; i++) {
     const question = questions[i];
-    let inputText = '';
     if (i === 0) {
-      inputText = `Article: "${article}"\n\n`;
+      // await singlePrompt(question, `Article: "${article}"\n\n`);
+      queueTask(() => singlePrompt(question, `Article: "${article}"\n\n`));
+    } else {
+      // await singlePrompt(question);
+      queueTask(() => singlePrompt(question));
     }
-    inputText += `Q:${question}\nA:`;
-
-    console.groupCollapsed('Prompt');
-    console.log(inputText);
-    console.groupEnd();
-
-    try {
-      const outputStream = promptObj.promptStreaming(inputText);
-      if (outputStream) {
-        await addAiResponseStream(question, outputStream);
-      }
-
-    } catch (error) {
-      handlePromptError(error);
-    }
-
-    console.log(promptObj.info());
   }
+}
+
+
+let promptQueue: Promise<void> = Promise.resolve();
+
+/**
+ * Queue a prompt to be executed sequentially.
+ * @param task A async function that returns a promise. Assumes the task is `singlePrompt`.
+ */
+function queueTask(task: () => Promise<void>): void {
+    promptQueue = promptQueue.then(() => task());
+}
+
+async function singlePrompt(question: string, prependText: string | null = null) {
+  const inputText = prependText ? prependText + question : question;
+
+  console.groupCollapsed('Prompt');
+  console.log(inputText);
+  console.groupEnd();
+
+  try {
+    const outputStream = promptObj.promptStreaming(inputText);
+    if (outputStream) {
+      await addAiResponseStream(question, outputStream);
+    }
+
+  } catch (error) {
+    handlePromptError(error);
+  }
+
+  console.log(promptObj.info());
 }
 
 
