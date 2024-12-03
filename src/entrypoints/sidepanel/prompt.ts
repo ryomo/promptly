@@ -1,10 +1,13 @@
 export class Prompt {
-  SYSTEM_PROMPT = 'Please write the answer to the following question as concisely as possible based on the "Article".';
+  session?: AILanguageModel;
+  systemPrompt?: string;
 
-  session: AILanguageModel | null;
-
-  constructor() {
-    this.session = null;
+  constructor(systemPrompt?: string) {
+    this.session = undefined;
+    this.systemPrompt = systemPrompt;
+    if (!this.systemPrompt) {
+      this.systemPrompt = 'Please write the answer in English to the following question concisely based on the "Article".';
+    }
   }
 
   async init() {
@@ -23,7 +26,7 @@ export class Prompt {
         });
       },
       // Set the system prompt
-      systemPrompt: this.SYSTEM_PROMPT,
+      systemPrompt: this.systemPrompt,
     });
   }
 
