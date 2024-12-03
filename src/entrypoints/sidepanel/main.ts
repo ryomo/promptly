@@ -1,9 +1,13 @@
 import { browser } from 'wxt/browser';
-import { getTabId, isHttpPage, readArticleFromContent, clearAiResponses, addAiResponse, showErrorMessage, hideErrorMessage } from './utils';
-import { summarizeText, SummarizeError } from './summarize';
+import { Prompt } from './prompt';
+import { SummarizeError, summarizeText } from './summarize';
+import { addAiResponse, addAiResponseStream, clearAiResponses, getTabId, hideErrorMessage, isHttpPage, readArticleFromContent, showErrorMessage } from './utils';
 
 
 const tabId = await getTabId();
+
+let promptSession: Prompt;
+
 
 main();
 
@@ -54,13 +58,52 @@ async function process(tabId: number) {
   clearAiResponses();
 
   // Summarize API
-  await summarizeApi(article);
+  // NOTE: Disabled for now, because the context window is limited to 1024 tokens.
+  // await summarizeApi(article);
+
+  // Prompt API
+  await promptApi(article);
 }
 
 
 function initialize() {
   hideErrorMessage();
   clearAiResponses();
+
+  if (promptSession) {
+    promptSession.destroy();
+  }
+}
+
+
+async function promptApi(article: string) {
+  promptSession = new Prompt();
+  await promptSession.init();
+
+  const questions = [
+    "Summarize this article. (~1000 characters)",
+    "What are the key points of the article? (~2000 characters)",
+    "I'm a programmer. Please explain the parts of this article that are relevant to me. (~1000 characters)",
+  ]
+
+  console.groupCollapsed('Prompt API');
+
+  for (let i=0; i<questions.length; i++) {
+    const question = questions[i];
+    let prompt = '';
+    if (i === 0) {
+      prompt = `Article: "${article}"\n\n`;
+    }
+    prompt += `Q:${question}\nA:`;
+    console.log(prompt);
+    const stream = promptSession.promptStreaming(prompt);
+    await addAiResponseStream(question, stream);
+    console.log(promptSession.info());
+  }
+
+  console.groupEnd();
+
+  promptSession.destroy();
 }
 
 

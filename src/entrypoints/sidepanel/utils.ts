@@ -103,6 +103,31 @@ export async function addAiResponse(title: string, markdown: string) {
   divParent.appendChild(divChild);
 }
 
+export async function addAiResponseStream(question: string, markdownStream: ReadableStream<string>) {
+  const divParent = document.getElementById(DIV_AI_PARENT_ID);
+  if (!divParent) {
+    return;
+  }
+
+  /**
+   * <div class="ai-response-container">
+   *   <h2>Question</h2>
+   *   <div>The AI's response will appear here.</div>
+   * </div>
+   */
+  const divChild = document.createElement('div');
+  divChild.classList.add(DIV_AI_CHILD_CLASS);
+  divChild.appendChild(document.createElement('h2')).textContent = question;
+
+  const divAiResponse = document.createElement('div');
+  divChild.appendChild(divAiResponse);
+  divParent.appendChild(divChild);
+
+  for await (const markdown of markdownStream) {
+    divAiResponse.innerHTML = await markdownToDiv(markdown);
+  }
+}
+
 async function markdownToDiv(markdown: string) {
   const html = await marked(markdown);
   const sanitizedHtml = DOMPurify.sanitize(html);

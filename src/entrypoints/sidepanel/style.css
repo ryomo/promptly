@@ -5,30 +5,49 @@ body {
   padding: 0;
 }
 
+#config-section {
+  margin: 10px 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+
+  #collapsible-textarea {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+  }
+}
+
 #error-section {
   width: calc(100% - 10px);
-  height: 100px;
-  padding: 15px;
   background-color: #f777771c;
   border: 1px solid #d33;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   display: none;
 
-  h2 {
-    font-size: medium;
-    margin: 0 0 10px;
-    color: #d33;
-  }
+  .error-container {
+    padding: 15px;
 
-  .error-message {
-    /* padding: 15px; */
-    /* border-bottom: 1px solid #ddd; */
+    h2 {
+      font-size: medium;
+      margin: 0 0 10px;
+      color: #d33;
+    }
+
+    .error-message {
+      color: #fdd;
+    }
   }
 }
 
 #ai-section {
   width: calc(100% - 10px);
-  height: 100vh;
+  height: calc(100vh - 180px);  /* If changed, #prompt-input height should be changed accordingly */
   border: 1px solid #ddd;
   background-color: #f9f9f9;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -67,5 +86,42 @@ body {
     ul li a:hover {
       text-decoration: underline;
     }
+  }
+}
+
+#input-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+
+  #prompt-input {
+    flex: 1;
+    padding: 8px;
+    height: 80px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    resize: vertical;
+    transform-origin: bottom;
+  }
+
+  #submit-button {
+    width: 80px;
+    padding: 8px 15px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  #submit-button:hover {
+    background-color: #0056b3;
   }
 }
