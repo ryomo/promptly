@@ -4,6 +4,7 @@ import { addQuestionEditingEventListeners, addSingleQuestionEventListener } from
 import { Prompt, PromptError } from './prompt';
 import { SummarizeError, summarizeText } from './summarize';
 import { addAiResponse, addAiResponseStream, addCloseErrorButtonEventListener, clearAiResponses, getTabId, hideErrorMessage, isHttpPage, readArticleFromContent, showErrorMessage } from './utils';
+import { TaskQueue } from './taskQueue';
 
 
 const DEFAULT_QUESTIONS = [
@@ -14,9 +15,8 @@ const DEFAULT_QUESTIONS = [
 
 let promptObj: Prompt;
 let questions: string[] = [];
-
+const taskQueue = new TaskQueue();
 const tabId = await getTabId();
-
 
 main();
 
@@ -57,7 +57,7 @@ async function main() {
   });
 
   addSingleQuestionEventListener(async (question) => {
-    queueTask(() => singlePrompt(question));
+    taskQueue.addTask(() => singlePrompt(question));
   });
 }
 
@@ -86,7 +86,7 @@ async function process(tabId: number) {
   // await summarizeApi(article);
 
   // Prompt API
-  await promptApi(article);
+  await promptQuestions(article);
 }
 
 
@@ -101,7 +101,7 @@ function initialize() {
 }
 
 
-async function promptApi(article: string) {
+async function promptQuestions(article: string) {
   promptObj = new Prompt();
   await promptObj.init();
 
@@ -109,24 +109,14 @@ async function promptApi(article: string) {
     const question = questions[i];
     if (i === 0) {
       // await singlePrompt(question, `Article: "${article}"\n\n`);
-      queueTask(() => singlePrompt(question, `Article: "${article}"\n\n`));
+      taskQueue.addTask(() => singlePrompt(question, `Article: "${article}"\n\n`));
     } else {
       // await singlePrompt(question);
-      queueTask(() => singlePrompt(question));
+      taskQueue.addTask(() => singlePrompt(question));
     }
   }
 }
 
-
-let promptQueue: Promise<void> = Promise.resolve();
-
-/**
- * Queue a prompt to be executed sequentially.
- * @param task A async function that returns a promise. Assumes the task is `singlePrompt`.
- */
-function queueTask(task: () => Promise<void>): void {
-    promptQueue = promptQueue.then(() => task());
-}
 
 async function singlePrompt(question: string, prependText: string | null = null) {
   const inputText = prependText ? prependText + question : question;
