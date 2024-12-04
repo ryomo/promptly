@@ -6,7 +6,7 @@ export default defineConfig({
   outDir: 'dist',
   extensionApi: 'chrome',
   manifest: {
-    name: 'Quick Explain',
+    name: 'Promptly',
     permissions: ['storage', 'tabs', 'scripting', 'debugger'],
     host_permissions: ["*://*/*"],
   }
