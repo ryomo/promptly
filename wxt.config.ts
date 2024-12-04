@@ -10,5 +10,12 @@ export default defineConfig({
     name: 'Promptly',
     permissions: ['storage', 'tabs', 'scripting'],
     host_permissions: ["*://*/*"],
-  }
+  },
+  vite: () => ({
+    esbuild: {
+      supported: {
+        'top-level-await': true,
+      },
+    },
+  }),
 });
