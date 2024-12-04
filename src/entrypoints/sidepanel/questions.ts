@@ -1,5 +1,11 @@
 import { storage } from 'wxt/storage';
 
+export const DEFAULT_QUESTIONS = [
+  "Summarize this article.",
+  "What are the key points of the article? (<1000 characters)",
+  "I'm a programmer. Please explain the parts of this article that are relevant to me.",
+];
+
 /**
  * Adds event listeners to the toggle button and question buttons.
  * Watch the questions in local storage and run `onStorageUpdated` when the questions are updated.

@@ -1,4 +1,7 @@
 export class Prompt {
+  DEFAULT_SYSTEM_PROMPT = 'Please write the answer in English to the following question concisely based on the "Article".'
+    + 'If the length of the answer is not specified in the each question, keep the answer within 100 words.';
+
   session?: AILanguageModel;
   systemPrompt?: string;
 
@@ -6,7 +9,7 @@ export class Prompt {
     this.session = undefined;
     this.systemPrompt = systemPrompt;
     if (!this.systemPrompt) {
-      this.systemPrompt = 'Please write the answer in English to the following question concisely based on the "Article".';
+      this.systemPrompt = this.DEFAULT_SYSTEM_PROMPT;
     }
   }
 

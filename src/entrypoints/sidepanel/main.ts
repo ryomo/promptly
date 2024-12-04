@@ -1,17 +1,11 @@
 import { browser } from 'wxt/browser';
 import { storage } from 'wxt/storage';
-import { addQuestionEditingEventListeners, addSingleQuestionEventListener } from './questions';
+import { addQuestionEditingEventListeners, addSingleQuestionEventListener, DEFAULT_QUESTIONS } from './questions';
 import { Prompt, PromptError } from './prompt';
 import { SummarizeError, summarizeText } from './summarize';
 import { addAiResponse, addAiResponseStream, addCloseErrorButtonEventListener, clearAiResponses, getTabId, hideErrorMessage, isHttpPage, readArticleFromContent, showErrorMessage } from './utils';
 import { TaskQueue } from './taskQueue';
 
-
-const DEFAULT_QUESTIONS = [
-  "Summarize this article. (~1000 characters)",
-  "What are the key points of the article? (~2000 characters)",
-  "I'm a programmer. Please explain the parts of this article that are relevant to me. (~1000 characters)",
-];
 
 let promptObj: Prompt;
 let questions: string[] = [];
