@@ -5,6 +5,7 @@ export default defineConfig({
   srcDir: 'src',
   outDir: 'dist',
   extensionApi: 'chrome',
+  modules: ['@wxt-dev/auto-icons'],
   manifest: {
     name: 'Promptly',
     permissions: ['storage', 'tabs', 'scripting', 'debugger'],
