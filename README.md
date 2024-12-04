@@ -21,6 +21,21 @@ chrome://components
 
 ## Usage
 
-1. `npm install`
-2. `npm run dev`
-3. On the Chrome Extensions page, click "Load unpacked" and select the .output/chrome-mv3 folder.
+### Development
+
+```sh
+npm install
+npm run dev
+```
+
+On the Chrome Extensions page, click "Load unpacked" and select the dist/chrome-mv3 folder.
+
+
+### Build for Production
+
+```sh
+npm install
+npm run build
+```
+
+On the Chrome Extensions page, click "Load unpacked" and select the dist/chrome-mv3 folder.
