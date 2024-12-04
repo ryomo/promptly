@@ -13,8 +13,6 @@ chrome://flags
 
 * `optimization-guide-on-device-model` -> "Enabled BypassPerfRequirement"
 * `prompt-api-for-gemini-nano` -> "Enabled"
-* `translation-api` -> "Enabled without language pack limit"
-* `language-detection-api` -> "Enabled"
 
 chrome://components
 

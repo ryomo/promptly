@@ -8,7 +8,7 @@ export default defineConfig({
   modules: ['@wxt-dev/auto-icons'],
   manifest: {
     name: 'Promptly',
-    permissions: ['storage', 'tabs', 'scripting', 'debugger'],
+    permissions: ['storage', 'tabs', 'scripting'],
     host_permissions: ["*://*/*"],
   }
 });
